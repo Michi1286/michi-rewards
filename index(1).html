@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111426">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>MICHI REWARDS</title>
+<style>
+:root {
+  --site-primary: #6557E8;
+  --site-secondary: #151A32;
+  --site-background: #0D1020;
+  --site-on-primary: #FFFFFF;
+  --site-on-secondary: #FFFFFF;
+  --site-on-background: #F7F7FC;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background: var(--site-background); color: var(--site-on-background); overflow: hidden; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.shell { max-width: 1040px; margin: 0 auto; padding: calc(20px * var(--site-spacing-scale)); }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; padding: 12px 0 22px; }
+.brand { display:flex; align-items:center; gap:11px; font-weight:900; letter-spacing:.04em; }
+.logo { width:42px; height:42px; display:grid; place-items:center; border-radius: calc(14px * var(--site-radius-scale)); background:linear-gradient(135deg,var(--site-primary),#E94FA8); color:white; font-size:22px; box-shadow:0 8px 28px #6557E855; }
+.brand small { display:block; color:#A8AAC0; font-size:10px; letter-spacing:.18em; margin-top:2px; }
+.pill { border:1px solid #343954; color:#D7D8E8; border-radius:999px; padding:8px 12px; font-size:12px; background:#191E36; }
+.hero { position:relative; overflow:hidden; border:1px solid #343954; border-radius: calc(25px * var(--site-radius-scale)); padding:clamp(22px,5vw,42px); background:linear-gradient(120deg,#282052,var(--site-secondary) 60%,#25203D); }
+.hero:after { content:""; position:absolute; width:230px;height:230px;right:-60px;top:-90px;border-radius:50%;background:radial-gradient(circle,#A44BFF66,transparent 68%);opacity:var(--site-decoration-opacity);pointer-events:none; }
+.eyebrow { color:#C8BFFF; text-transform:uppercase; letter-spacing:.2em; font-size:11px; font-weight:800; }
+h1,h2,h3 { font-family:var(--site-font-heading); }
+h1 { font-size:calc(clamp(34px,8vw,58px) * var(--site-heading-scale)); line-height:.98; margin:12px 0; letter-spacing:-.05em; }
+.hero p { color:#C5C7D9; max-width:540px; line-height:1.6; margin-bottom:20px; }
+.primary { border:0; color:var(--site-on-primary); background:var(--site-primary); padding:13px 18px; border-radius: calc(13px * var(--site-radius-scale)); font-weight:800; box-shadow:0 8px 22px #6557E844; }
+.secondary { border:1px solid #454A68; color:#F4F3FF; background:#242A45; padding:12px 16px; border-radius:calc(13px * var(--site-radius-scale)); font-weight:700; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:16px 0; }
+.stat,.panel { background:#171C32; border:1px solid #303651; border-radius:calc(18px * var(--site-radius-scale)); padding:17px; }
+.stat .num { font-size:26px; font-weight:900; margin-top:7px; }
+.muted { color:#A7AAC0; font-size:12px; }
+.tabs { display:flex; gap:8px; overflow:auto; padding:4px 0 14px; }
+.tab { white-space:nowrap; border:1px solid #343954; color:#BFC2D6; background:#171C32; padding:10px 14px; border-radius:999px; font-weight:700; }
+.tab.active { background:var(--site-primary); color:white; border-color:var(--site-primary); }
+.section { margin-top:14px; }
+.section h2 { font-size:22px; margin:0 0 12px; }
+.panel { padding:20px; }
+.field { display:grid; gap:7px; margin:12px 0; }
+label { font-size:12px; color:#C5C7D9; font-weight:700; }
+input,select { width:100%; border:1px solid #3B4260; background:#0F1428; color:#fff; padding:13px 14px; border-radius:12px; outline:none; }
+input:focus,select:focus { border-color:#8B80FF; box-shadow:0 0 0 3px #6557E833; }
+.row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.row > * { flex:1; }
+.wheel-wrap { display:grid; grid-template-columns:minmax(220px,1fr) minmax(220px,1fr); gap:22px; align-items:center; }
+.wheel { width:min(100%,290px); aspect-ratio:1; margin:auto; border-radius:50%; border:9px solid #E8D8A8; background:conic-gradient(#F5B93D 0 45deg,#5C55D9 45deg 90deg,#E64E9B 90deg 135deg,#25A6A1 135deg 180deg,#F5B93D 180deg 225deg,#5C55D9 225deg 270deg,#E64E9B 270deg 315deg,#25A6A1 315deg 360deg); position:relative; box-shadow:0 0 0 5px #30294D,0 18px 38px #0008; transition:transform 3s cubic-bezier(.12,.75,.12,1); }
+.wheel:before { content:""; position:absolute; inset:36%; background:#171A30; border:5px solid #E8D8A8; border-radius:50%; }
+.pointer { width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:27px solid #FFF3C8;position:absolute;left:calc(50% - 15px);top:-15px;z-index:2;filter:drop-shadow(0 3px 3px #0008); }
+.wheel-labels { position:absolute; inset:0; color:#fff; font-weight:900; text-shadow:0 2px 4px #0009; }
+.wheel-labels span { position:absolute; font-size:12px; }
+.wheel-labels span:nth-child(1){top:13%;left:63%}.wheel-labels span:nth-child(2){top:38%;right:7%}.wheel-labels span:nth-child(3){bottom:15%;right:25%}.wheel-labels span:nth-child(4){bottom:15%;left:23%}.wheel-labels span:nth-child(5){top:38%;left:7%}.wheel-labels span:nth-child(6){top:13%;left:22%}
+.notice { border:1px solid #66542A; background:#342A19; color:#F7D99A; padding:12px 14px; border-radius:12px; font-size:12px; line-height:1.5; }
+.codebox { border:1px dashed #8175FF; background:#211D40; padding:14px; border-radius:14px; color:#E5E1FF; overflow-wrap:anywhere; }
+.adminbox { border:1px solid #725F2C; background:#292416; padding:14px; border-radius:14px; }
+ .admin-login { max-width:460px; margin:18px auto; border:1px solid #725F2C; background:linear-gradient(145deg,#211d35,#171c32); border-radius:18px; padding:22px; }
+ .admin-login h3 { margin-top:0; }
+ .security-note { color:#E9D7A2; font-size:12px; line-height:1.5; }
+.prize { display:flex; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid #303651; padding:13px 0; }
+.prize:last-child { border-bottom:0; }
+.feature-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.feature-card { background:#11172B; border:1px solid #343954; border-radius:15px; padding:15px; min-width:0; }
+.feature-card h3 { margin:0 0 7px; font-size:15px; }
+.feature-card p { color:#A7AAC0; font-size:12px; line-height:1.5; margin:0 0 11px; }
+.feature-card .primary,.feature-card .secondary { padding:9px 11px; font-size:12px; }
+.feature-tag { color:#C8BFFF; font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+.spec-list { display:grid; gap:9px; }
+.spec-list div { padding:10px 12px; background:#11172B; border-radius:10px; color:#C5C7D9; font-size:12px; line-height:1.5; }
+.hidden { display:none !important; }
+footer { color:#8589A3; font-size:11px; text-align:center; padding:24px 8px 10px; }
+.toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#F5F2FF; color:#17152B; border-radius:12px; padding:12px 16px; box-shadow:0 8px 30px #0006; z-index:10; font-weight:700; max-width:90vw; text-align:center; }
+@media(max-width:650px){.shell{padding:15px}.grid{grid-template-columns:1fr 1fr}.grid .stat:last-child{grid-column:span 2}.wheel-wrap{grid-template-columns:1fr}.hero{padding:23px}.topbar{padding-bottom:15px}.feature-grid{grid-template-columns:1fr}}
+@media(prefers-color-scheme:light){body,#app{background:var(--site-background);color:var(--site-on-background)}}
+</style>
+</head>
+<body>
+<div id="app">
+ <main class="shell">
+  <header class="topbar">
+   <div class="brand"><div class="logo">M</div><div>MICHI REWARDS<small>GIRA · GANA · CANJEA</small></div></div>
+   <div class="pill" id="userPill">INVITADO</div>
+  </header>
+  <section class="hero">
+   <div class="eyebrow">La comunidad tiene premios</div>
+   <h1>Tu suerte.<br>Tu recompensa.</h1>
+   <p>Participa con tu código MICHIS, gira la ruleta y acumula puntos para solicitar recompensas de Blood Strike.</p>
+   <button class="primary" onclick="showTab('registro')">Entrar a la comunidad ↗</button>
+  </section>
+  <section class="grid">
+   <div class="stat"><div class="muted">MI SALDO</div><div class="num" id="balance">0 <span style="font-size:13px;color:#B8B5FF">PTS</span></div></div>
+   <div class="stat"><div class="muted">GIROS DISPONIBLES</div><div class="num" id="spins">0</div></div>
+   <div class="stat"><div class="muted">MIS SOLICITUDES</div><div class="num" id="requests">0</div></div>
+  </section>
+  <nav class="tabs" aria-label="Secciones">
+   <button class="tab active" data-tab="inicio" onclick="showTab('inicio')">Inicio</button>
+   <button class="tab" data-tab="funciones" onclick="showTab('funciones')">✨ Funciones</button>
+   <button class="tab" data-tab="registro" onclick="showTab('registro')">Registro</button>
+   <button class="tab" data-tab="ruleta" onclick="showTab('ruleta')">🎡 Ruleta</button>
+   <button class="tab" data-tab="misiones" onclick="showTab('misiones')">🎯 Misiones</button>
+   <button class="tab" data-tab="canjes" onclick="showTab('canjes')">🎁 Canjes</button>
+   <button class="tab" data-tab="codigos" onclick="showTab('codigos')">🎟️ Códigos</button>
+   <button class="tab" data-tab="historial" onclick="showTab('historial')">Historial</button>
+   <button class="tab" data-tab="fama" onclick="showTab('fama')">🏆 Salón de la fama</button>
+   <button class="tab" data-tab="transferencias" onclick="showTab('transferencias')">🎁 Regalar puntos</button>
+   <button class="tab" data-tab="admin" onclick="showTab('admin')">👑 Admin</button>
+  </nav>
+  <section id="tab-inicio" class="section">
+   <div class="panel">
+    <h2>Bienvenido a MICHI REWARDS</h2>
+    <p class="muted">Esta es una demostración funcional. Regístrate con tu ID de jugador y el código de invitación para probar el recorrido completo.</p>
+    <div class="notice">⚠️ Regla MICHI REWARDS: únicamente Michi puede autorizar y entregar puntos, tanto normales como los de misiones, ruletas, eventos o premios. Los códigos también los crea y administra Michi. Esta vista previa no acredita puntos reales; la autorización segura se realizará desde el servidor.</div>
+    <div class="section"><h2>¿Cómo funciona?</h2>
+     <div class="prize"><span>01 · Regístrate con tu ID de jugador</span><b>🎮</b></div>
+     <div class="prize"><span>02 · Usa el código de invitación MICHIS</span><b>🤝</b></div>
+     <div class="prize"><span>03 · Gira y gana puntos o premio especial</span><b>🎡</b></div>
+     <div class="prize"><span>04 · Solicita tu recompensa</span><b>🪙</b></div>
+    </div>
+    <button class="primary" onclick="showTab('registro')">Comenzar registro</button>
+   </div>
+  </section>
+  <section id="tab-funciones" class="section hidden">
+   <div class="panel">
+    <h2>✨ Centro gamer MICHI</h2>
+    <p class="muted">Todas las actividades de la comunidad reunidas en un solo lugar. Las acciones de esta vista previa son demostrativas; los premios reales necesitan validación desde el servidor.</p>
+    <h3>🎯 Actividad y progreso</h3>
+    <div class="feature-grid">
+     <article class="feature-card"><span class="feature-tag">Cada día</span><h3>🎁 Recompensa diaria y rachas</h3><p>Reclama una recompensa diaria. La racha aumenta al entrar en días consecutivos; se reinicia según las reglas del evento.</p><button class="primary" onclick="featureAction('Recompensa diaria registrada en la demostración')">Reclamar recompensa</button></article>
+     <article class="feature-card"><span class="feature-tag">Retos</span><h3>⚔️ Misiones y desafíos gamer</h3><p>Misiones por juego: completar objetivos, participar en eventos o compartir evidencia. Cada misión muestra progreso, fecha límite y premio.</p><button class="secondary" onclick="featureAction('Misiones: próximamente conectadas al servidor')">Ver misiones</button></article>
+     <article class="feature-card"><span class="feature-tag">Comunidad</span><h3>🤝 Invitar amigos</h3><p>Cada jugador tendrá un código propio. El bono se acredita cuando el invitado sea verificado y complete una actividad válida.</p><div class="codebox">Tu código: <b id="personalReferral">MICHI-INVITADO</b></div><button class="secondary" onclick="copyReferral()">Copiar mi código</button></article>
+     <article class="feature-card"><span class="feature-tag">Competencia</span><h3>🏆 Ranking semanal y mensual</h3><p>Tablas por puntos ganados, misiones completadas y participación. Reinicio por temporada, con reglas visibles y desempates definidos.</p><button class="secondary" onclick="featureAction('El ranking aparecerá cuando existan datos verificados')">Consultar ranking</button></article>
+     <article class="feature-card"><span class="feature-tag">Premios sorpresa</span><h3>📦 Cajas misteriosas</h3><p>Abre cajas con premios posibles y probabilidades publicadas antes de abrir. Cada apertura queda registrada y tiene límites por cuenta.</p><button class="secondary" onclick="featureAction('Las cajas se habilitarán al configurar premios y probabilidades')">Ver cajas</button></article>
+     <article class="feature-card"><span class="feature-tag">Acceso especial</span><h3>👑 Ruleta VIP</h3><p>Ruleta separada con requisitos de acceso, costo y probabilidades independientes. No altera las probabilidades de la ruleta normal.</p><button class="secondary" onclick="featureAction('La ruleta VIP está bloqueada hasta cumplir sus requisitos')">Ver acceso VIP</button></article>
+     <article class="feature-card"><span class="feature-tag">TikTok</span><h3>📱 Eventos especiales</h3><p>Retos y códigos temporales anunciados en lives, videos y grupos. Cada evento tendrá vigencia, cupo y reglas.</p><button class="secondary" onclick="featureAction('No hay eventos especiales activos en esta demostración')">Ver eventos</button></article>
+     <article class="feature-card"><span class="feature-tag">Avisos</span><h3>🔔 Notificaciones de premios</h3><p>Avisos dentro de la plataforma sobre puntos, códigos, misiones, canjes aprobados y sorteos. El usuario podrá elegir qué avisos recibir.</p><button class="secondary" onclick="featureAction('Centro de notificaciones: vista de demostración')">Abrir notificaciones</button></article>
+     <article class="feature-card"><span class="feature-tag">Ayuda</span><h3>💬 Chat o soporte de Michi</h3><p>Canal para reportar problemas de cuenta, canjes o códigos. Los tickets tendrán folio, estado y respuesta del administrador.</p><button class="secondary" onclick="featureAction('Soporte: prepara tu consulta y el equipo de Michi podrá responder')">Contactar soporte</button></article>
+     <article class="feature-card"><span class="feature-tag">Identidad</span><h3>😺 Perfil, avatar y nivel</h3><p>Perfil con apodo, avatar, juego principal, nivel, insignias, racha y código de referido. Los datos sensibles no serán públicos.</p><button class="secondary" onclick="featureAction('El perfil editable se activará al conectar una cuenta segura')">Personalizar perfil</button></article>
+    </div>
+    <h3 class="section">🛒 Tienda para cuatro juegos</h3>
+    <div class="field"><label for="storeGame">Selecciona el catálogo</label><select id="storeGame" onchange="featureAction('Catálogo seleccionado: '+this.value)"><option>Blood Strike</option><option>Free Fire</option><option>Roblox</option><option>Delta Force</option></select></div>
+    <p class="muted">Cada catálogo tendrá recompensas, costo en puntos, disponibilidad, requisitos y estado de entrega propios.</p>
+    <h3 class="section">🛡️ Confianza, control y comunidad</h3>
+    <div class="feature-grid">
+     <article class="feature-card"><span class="feature-tag">Transparencia</span><h3>📜 Historial completo</h3><p>Registro cronológico de puntos ganados y gastados, giros, cajas, códigos, referidos, canjes y ajustes administrativos.</p><button class="secondary" onclick="showTab('historial')">Abrir historial</button></article>
+     <article class="feature-card"><span class="feature-tag">Seguridad</span><h3>🛡️ Referidos antifraude</h3><p>Detecta autocanjes, cuentas duplicadas, patrones anómalos y abuso de dispositivos. Los casos sospechosos pasan a revisión manual.</p><button class="secondary" onclick="featureAction('Las alertas antifraude solo serán visibles para administración')">Ver reglas</button></article>
+     <article class="feature-card"><span class="feature-tag">Propietario</span><h3>📊 Estadísticas de Michi</h3><p>Panel privado con jugadores activos, puntos emitidos y canjeados, costos, premios pendientes, uso de códigos y actividad por juego.</p><button class="secondary" onclick="showTab('admin')">Ir al panel admin</button></article>
+     <article class="feature-card"><span class="feature-tag">Comunidad</span><h3>🎉 Sorteos de Michi</h3><p>Sorteos administrados por Michi con reglas, fechas, elegibilidad, lista auditable de participantes y ganador registrado.</p><button class="secondary" onclick="featureAction('No hay sorteos abiertos en este momento')">Ver sorteos</button></article>
+    </div>
+   </div>
+   <div class="panel section">
+    <h2>💜 MICHI REWARDS · Beneficios de comunidad</h2>
+    <p class="muted">Nuevas áreas planeadas para jugadores: billetera, misiones, tienda, eventos, membresía VIP y carnet digital.</p>
+    <div class="feature-grid">
+     <article class="feature-card"><span class="feature-tag">Mi cuenta</span><h3>💳 Billetera MICHI</h3><p>Consulta tu saldo, puntos ganados, puntos gastados y movimientos con fecha y motivo.</p><button class="secondary" onclick="featureAction('La billetera detallada estará disponible al conectar la base de datos')">Ver movimientos</button></article>
+     <article class="feature-card"><span class="feature-tag">Retos verificables</span><h3>📸 Misiones y evidencias</h3><p>Completa retos, sube capturas y consulta si Michi aprobó, rechazó o pidió corregir tu evidencia.</p><button class="secondary" onclick="featureAction('Las misiones con evidencias se habilitarán al conectar el servidor')">Consultar misiones</button></article>
+     <article class="feature-card"><span class="feature-tag">Cuatro juegos</span><h3>🛍️ Tienda de recompensas</h3><p>Catálogos para Blood Strike, Free Fire, Roblox y Delta Force con costos, existencias y estado de entrega.</p><button class="secondary" onclick="showTab('canjes')">Explorar premios</button></article>
+     <article class="feature-card"><span class="feature-tag">Evento relámpago</span><h3>🌧️ Lluvia de puntos</h3><p>Michi activa una bolsa de puntos con cupo y duración definidos. Los primeros participantes elegibles podrán reclamar según las reglas publicadas.</p><button class="secondary" onclick="featureAction('No hay lluvia de puntos activa por ahora')">Ver lluvia activa</button></article>
+     <article class="feature-card"><span class="feature-tag">Por temporada</span><h3>🎡 Ruleta de temporada</h3><p>Premios y probabilidades especiales por temporada, con vigencia, límites y resultados registrados.</p><button class="secondary" onclick="featureAction('La ruleta de temporada se habilitará cuando Michi publique un evento')">Ver temporada</button></article>
+     <article class="feature-card"><span class="feature-tag">Membresía</span><h3>👑 Pase VIP MICHI</h3><p>Consulta beneficios, precio e instrucciones de transferencia. Después de revisar el comprobante, Michi activa manualmente el pase.</p><button class="secondary" onclick="showTab('vip')">Ver pase VIP</button></article>
+     <article class="feature-card"><span class="feature-tag">Comunicados</span><h3>📢 Centro de anuncios</h3><p>Noticias, mantenimientos, códigos, eventos, ganadores y avisos oficiales de la comunidad.</p><button class="secondary" onclick="showTab('anuncios')">Abrir anuncios</button></article>
+     <article class="feature-card"><span class="feature-tag">Identidad gamer</span><h3>🪪 Carnet digital</h3><p>Tarjeta compartible con apodo, avatar, juego principal, nivel, puntos, insignias y antigüedad.</p><button class="secondary" onclick="featureAction('El carnet digital se generará cuando tu cuenta esté verificada')">Ver mi carnet</button></article>
+    </div>
+   </div>
+   <div class="panel section">
+    <h2>🧩 Especificaciones para la versión real</h2>
+    <div class="spec-list">
+     <div><b>1. Cuenta y perfil:</b> registro único, verificación, ID de jugador por juego, avatar, nivel y código de referido.</div>
+     <div><b>2. Billetera:</b> saldo calculado desde movimientos inmutables; cada abono, gasto, premio o ajuste guarda fecha, motivo y referencia.</div>
+     <div><b>3. Premios aleatorios:</b> probabilidades y límites configurados solo por Michi; resultado generado y validado en servidor, nunca por el navegador.</div>
+     <div><b>4. Códigos:</b> inventario de códigos únicos, puntos asignados, vigencia y registro de quién/cuándo lo canjeó. Cada código se consume en el primer canje válido global, sin importar el dispositivo o teléfono.</div>
+     <div><b>5. Posiciones y Salón de la Fama:</b> VIP por orden de aprobación (#m1, #m2…). ELITE por saldo de puntos (#1, #2…), con posiciones móviles. Salón de la Fama con Top 3 desde 5,000 puntos, actualizado semanalmente. Michi aparece aparte en NIVEL DIOS con 21,000,000 puntos o más.</div>
+     <div><b>6. Regalos de puntos:</b> transferencias entre miembros con saldo suficiente, límites configurables y registro atómico de débito y crédito.</div>
+     <div><b>7. Edad:</b> fecha de nacimiento obligatoria en el registro; solo mayores de 18 años pueden comprar el Pase VIP. Validación de edad en servidor.</div>
+     <div><b>8. Antifraude:</b> límites por cuenta y dispositivo, verificación de ID, detección de patrones y revisión de casos. Un identificador de dispositivo no garantiza por sí solo una persona por dispositivo.</div>
+     <div><b>6. Administración:</b> solo el propietario puede cambiar probabilidades, emitir puntos, crear premios, aprobar canjes, administrar sorteos y consultar reportes. Activar autenticación de dos factores y bitácora.</div>
+     <div><b>7. Privacidad:</b> mostrar apodos en rankings; proteger IDs completos, datos de cuenta y señales antifraude. Publicar reglas, probabilidades y condiciones de cada promoción.</div>
+     <div><b>8. Publicación:</b> conectar una base de datos y autenticación con permisos por rol; probar concurrencia, respaldos, recuperación y auditoría antes de entregar premios reales.</div>
+    </div>
+   </div>
+  </section>
+  <section id="tab-registro" class="section hidden">
+   <div class="panel">
+    <h2>Registro de jugador</h2><p class="muted">Solo necesitamos datos básicos para identificar tu participación.</p>
+    <form id="registerForm">
+     <div class="field"><label for="playerName">Nombre o apodo</label><input id="playerName" maxlength="30" placeholder="Ej. MichiFan23" required></div>
+     <div class="field"><label for="birthDate">Fecha de nacimiento</label><input id="birthDate" type="date" required></div>
+     <div class="field"><label for="gameSelect">Juego</label><select id="gameSelect"><option>Blood Strike</option><option>Free Fire</option><option>Roblox</option><option>Delta Force</option></select></div>
+     <div class="field"><label for="playerId">ID de jugador</label><input id="playerId" maxlength="40" placeholder="Tu ID del juego" required></div>
+     <div class="field"><label for="inviteCode">Código de invitación</label><input id="inviteCode" value="MICHIS" maxlength="20" required></div>
+     <button class="primary" type="submit">Crear mi registro</button>
+    </form>
+    <p class="muted">La fecha de nacimiento se utilizará para comprobar la edad. Solo las personas mayores de 18 años podrán comprar el Pase VIP. En producción, la comprobación y el registro deben validarse en el servidor.</p>
+   </div>
+  </section>
+  <section id="tab-ruleta" class="section hidden">
+   <div class="panel">
+    <h2>🎡 Ruleta de la suerte</h2><p class="muted">Cada giro consume un intento. Los resultados se muestran en tu historial.</p>
+    <div class="wheel-wrap">
+     <div style="position:relative"><div class="pointer"></div><div class="wheel" id="wheel"><div class="wheel-labels"><span>100</span><span>200</span><span>500</span><span>100</span><span>ORO*</span><span>1,000</span></div></div></div>
+     <div><div class="stat" style="margin-bottom:12px"><div class="muted">TUS GIROS</div><div class="num" id="wheelSpins">0</div></div><button class="primary" id="spinBtn" onclick="spin()" style="width:100%">GIRAR RULETA</button><p class="muted" style="margin-top:12px">*El premio especial genera una solicitud de recompensa; no acredita oro automáticamente.</p></div>
+    </div>
+    <div id="spinResult" class="notice hidden" style="margin-top:16px"></div>
+   </div>
+  </section>
+  <section id="tab-misiones" class="section hidden">
+   <div class="panel">
+    <h2>🎯 Misiones y desafíos</h2>
+    <p class="muted">Completa una actividad y envía tu evidencia. Michi revisará cada solicitud; no se entregan puntos automáticamente.</p>
+    <div class="prize"><span><b>⚔️ Reto de la comunidad</b><div class="muted">Participa en una partida y comparte evidencia de tu resultado.</div></span><b>Por definir</b></div>
+    <form id="missionForm">
+     <div class="field"><label for="missionGame">Juego</label><select id="missionGame"><option>Blood Strike</option><option>Free Fire</option><option>Roblox</option><option>Delta Force</option></select></div>
+     <div class="field"><label for="missionName">Misión realizada</label><input id="missionName" maxlength="80" placeholder="Describe el reto que completaste" required></div>
+     <div class="field"><label for="missionEvidence">Evidencia (enlace o descripción)</label><input id="missionEvidence" maxlength="500" placeholder="Pega un enlace o describe tu captura" required></div>
+     <button class="primary" type="submit">Enviar a revisión</button>
+    </form>
+    <h3 class="section">Mis solicitudes</h3><div id="missionClaimList" class="muted">Todavía no has enviado misiones.</div>
+    <div class="notice" style="margin-top:14px">El envío queda pendiente. Solo Michi puede aprobar la misión y autorizar los puntos. Esta versión guarda los datos únicamente en este navegador.</div>
+   </div>
+  </section>
+  <section id="tab-canjes" class="section hidden">
+   <div class="panel">
+    <h2>🎁 Catálogo de recompensas</h2><p class="muted">Elige una recompensa y solicita el canje con tus puntos disponibles.</p>
+    <div class="prize"><div><b>Paquete de oro</b><div class="muted">Recompensa sujeta a disponibilidad</div></div><b>1,000 pts</b></div>
+    <div class="prize"><div><b>Premio especial</b><div class="muted">Revisión manual del administrador</div></div><b>2,500 pts</b></div>
+    <div class="field"><label for="rewardSelect">Selecciona tu recompensa</label><select id="rewardSelect"><option value="1000">Paquete de oro · 1,000 puntos</option><option value="2500">Premio especial · 2,500 puntos</option></select></div>
+    <button class="primary" onclick="redeem()">Solicitar canje</button>
+    <p class="muted">La solicitud queda pendiente hasta que Michi confirme la disponibilidad y la entrega.</p>
+   </div>
+  </section>
+  <section id="tab-codigos" class="section hidden">
+   <div class="panel">
+    <h2>🎟️ Canjear código Michi</h2>
+    <p class="muted">Introduce un código promocional que Michi haya compartido para recibir puntos.</p>
+    <div class="field"><label for="promoInput">Código de recompensa</label><input id="promoInput" maxlength="40" placeholder="Ej. MICH-YTTW-TIKK-C926" autocomplete="off"></div>
+    <button class="primary" onclick="redeemPromoCode()">Canjear código</button>
+    <div class="notice" style="margin-top:14px">Cada código está diseñado para un solo canje global. Esta demostración solo puede recordar canjes en este navegador; la restricción entre todos los teléfonos requiere validación del servidor.</div>
+   </div>
+  </section>
+  <section id="tab-admin" class="section hidden">
+   <div id="adminLogin" class="admin-login">
+    <h2>🔒 Acceso de administrador</h2>
+    <p class="muted">Esta sección está reservada para el propietario de MICHI REWARDS.</p>
+    <form id="adminLoginForm">
+     <div class="field"><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Introduce tu contraseña" required></div>
+     <button class="primary" type="submit" style="width:100%">Desbloquear panel</button>
+    </form>
+    <p id="adminLoginError" class="security-note" role="alert"></p>
+    <p class="muted">Después de 5 intentos incorrectos, el acceso se bloqueará temporalmente.</p>
+   </div>
+   <div id="adminContent" class="hidden">
+   <div class="panel">
+    <div class="row" style="justify-content:space-between"><h2>👑 Administración Michi</h2><button class="secondary" type="button" onclick="lockAdmin()">🔐 Cerrar sesión</button></div>
+    <div class="adminbox"><b>Panel privado desbloqueado</b><p class="muted">Mantén tu contraseña en privado. Cierra la sesión al terminar, especialmente si compartes el dispositivo.</p></div>
+    <div class="field"><label for="newCode">Código que vas a compartir</label><div class="row"><input id="newCode" maxlength="14" placeholder="MICH-A7K2-P9Q4" readonly><button class="secondary" type="button" onclick="generatePromoCode()">Generar código</button></div><div class="muted">Formato: MICH-XXXX-XXXX · Cada código es de un solo uso global.</div></div>
+    <div class="field"><label for="newCodePoints">Puntos que entrega</label><input id="newCodePoints" type="number" min="1" max="1000000" value="500"></div>
+    <button class="primary" onclick="createPromoCode()">Crear código</button>
+    <h3>Códigos creados</h3><div id="adminCodeList" class="muted">Todavía no hay códigos.</div>
+    <h3 class="section">📥 Solicitudes pendientes</h3><div id="adminRequestList" class="muted">No hay solicitudes pendientes.</div>
+    <h3 class="section">🎯 Evidencias de misiones</h3><div id="adminMissionList" class="muted">No hay misiones pendientes.</div>
+    <h3 class="section">🛠️ Administración de comunidad</h3>
+    <div class="spec-list">
+     <div><b>Jugadores y seguridad:</b> revisar perfiles, verificar IDs, suspender cuentas sospechosas y consultar alertas antifraude.</div>
+     <div><b>Billeteras:</b> acreditar o retirar puntos con motivo obligatorio y registro de auditoría.</div>
+     <div><b>Misiones y evidencias:</b> crear retos, asignar premios, revisar capturas y aprobar o rechazar entregas.</div>
+     <div><b>Eventos:</b> publicar lluvia de puntos, ruletas de temporada, sorteos, fechas, cupos y reglas.</div>
+     <div><b>Pase VIP:</b> definir precios y duración, revisar solicitudes y comprobantes por canal seguro, activar o vencer membresías manualmente.</div>
+     <div><b>Anuncios:</b> redactar, publicar, fijar y retirar comunicados.</div>
+     <div><b>Tienda y canjes:</b> administrar catálogos, existencias, costos, solicitudes y estados de entrega.</div>
+     <div><b>Reportes:</b> consultar usuarios activos, puntos emitidos, canjes, ingresos VIP registrados y actividad por juego.</div>
+    </div>
+    <div class="notice" style="margin-top:14px">SEGURIDAD: esta contraseña añade una barrera contra accesos accidentales en esta demostración. La aplicación sigue guardando información en el navegador; para resistir a alguien que inspeccione el HTML, modifique el navegador o entre desde otro dispositivo, se necesita autenticación real en un servidor.</div>
+   </div>
+   </div>
+  </section>
+  <section id="tab-historial" class="section hidden">
+   <div class="panel"><h2>Mi historial</h2><div id="historyList" class="muted">Inicia sesión para ver tus movimientos.</div></div>
+  </section>
+  <section id="tab-fama" class="section hidden">
+   <div class="panel"><h2>🏆 Salón de la Fama</h2><p class="muted">Clasificación semanal de miembros elegibles. Para entrar al Top 3 se requieren al menos 5,000 puntos verificados.</p><div class="notice">La vista previa no contiene una base de datos de miembros ni puede calcular una clasificación real. El ranking se publicará aquí cuando esté conectado al servidor.</div><div class="prize"><span><b>🥇 #1 · Primer lugar</b><div class="muted">Miembro con más puntos elegibles</div></span><b>—</b></div><div class="prize"><span><b>🥈 #2 · Segundo lugar</b><div class="muted">Siguiente miembro elegible</div></span><b>—</b></div><div class="prize"><span><b>🥉 #3 · Tercer lugar</b><div class="muted">Tercer miembro elegible</div></span><b>—</b></div><h3 class="section">👑 NIVEL DIOS</h3><div class="adminbox"><b>MICHI · Puesto especial #M</b><p class="muted">Se mostrará por separado del Top 3 cuando su saldo verificado sea de 21,000,000 puntos o más. Actualización semanal.</p></div><p class="muted">Corte semanal, elegibilidad y desempates deberán quedar registrados en el servidor.</p></div>
+  </section>
+  <section id="tab-transferencias" class="section hidden">
+   <div class="panel"><h2>🎁 Regalar puntos</h2><p class="muted">Los miembros podrán enviar puntos a otros miembros de MICHI REWARDS.</p><div class="field"><label for="transferRecipient">Apodo del destinatario</label><input id="transferRecipient" maxlength="30" placeholder="Apodo exacto del miembro" disabled></div><div class="field"><label for="transferAmount">Cantidad de puntos</label><input id="transferAmount" type="number" min="1" step="1" placeholder="Ej. 100" disabled></div><button class="primary" disabled>Transferencias en preparación</button><div class="notice" style="margin-top:14px">Esta función requiere cuentas verificadas y una operación atómica en el servidor: comprobar saldo, validar al destinatario, aplicar límites antifraude y registrar el débito y el abono juntos. No se habilita en esta demostración local para evitar pérdidas o duplicaciones.</div></div>
+  </section>
+  <section id="tab-vip" class="section hidden">
+   <div class="panel">
+    <h2>👑 Pase VIP MICHI</h2>
+    <p class="muted">Membresía de pago con activación manual por el administrador.</p>
+    <div class="adminbox"><b>Beneficios VIP</b><div class="spec-list"><div>Acceso a eventos y dinámicas VIP.</div><div>Participación en ruletas y promociones exclusivas cuando estén activas.</div><div>Insignia VIP visible en tu perfil.</div><div>Beneficios y duración publicados antes de comprar.</div></div></div>
+    <div class="field"><label for="vipPlayer">Tu apodo registrado</label><input id="vipPlayer" placeholder="Escribe tu apodo"></div>
+    <div class="field"><label for="vipPlan">Plan que deseas solicitar</label><select id="vipPlan"><option value="Mensual">Pase VIP mensual</option><option value="Trimestral">Pase VIP trimestral</option></select></div>
+    <div class="notice">Solo mayores de 18 años pueden comprar el Pase VIP. La edad se comprobará con la fecha de nacimiento registrada. La compra y el pago se realizan exclusivamente por privado con Michi. No publiques ni ingreses aquí datos bancarios, comprobantes, contraseñas o códigos de seguridad.</div>
+    <button class="primary" onclick="requestVip()">Quiero mi Pase VIP</button>
+    <p class="muted">Al solicitarlo, recibirás las instrucciones para contactar a Michi por privado. Tu pase se activa manualmente después de confirmar el pago.</p>
+   </div>
+  </section>
+  <section id="tab-anuncios" class="section hidden">
+   <div class="panel"><h2>📢 Centro de anuncios</h2><p class="muted">Comunicados oficiales de MICHI REWARDS.</p><div id="announcementList" class="spec-list"><div>No hay anuncios publicados todavía. Vuelve pronto para conocer eventos, códigos y novedades.</div></div></div>
+  </section>
+  <footer>MICHI REWARDS · Proyecto comunitario independiente. No afiliado oficialmente con Blood Strike.</footer>
+ </main>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+<script>
+// Barrera local del panel de administración. No sustituye autenticación de servidor.
+const ADMIN_PASSWORD_HASH='759cfa2c3b0e98b13d52d10e7ab799211302c8348a3311a683830d59c2dd87f7';
+const ADMIN_SESSION_KEY='michi_rewards_admin_session';
+const ADMIN_LOCK_KEY='michi_rewards_admin_lock';
+function isAdminAuthenticated(){try{return sessionStorage.getItem(ADMIN_SESSION_KEY)==='unlocked';}catch(e){return false;}}
+function refreshAdminGate(){const allowed=isAdminAuthenticated();document.getElementById('adminLogin').classList.toggle('hidden',allowed);document.getElementById('adminContent').classList.toggle('hidden',!allowed);if(allowed){renderAdminCodes();renderAdminRequests();renderAdminMissions();}}
+function lockAdmin(){try{sessionStorage.removeItem(ADMIN_SESSION_KEY);}catch(e){}document.getElementById('adminPassword').value='';refreshAdminGate();toast('Panel de administración bloqueado.');}
+async function sha256Hex(value){const bytes=new TextEncoder().encode(value);const digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');}
+document.getElementById('adminLoginForm').addEventListener('submit',async e=>{e.preventDefault();const error=document.getElementById('adminLoginError');const now=Date.now();let lockUntil=0;try{lockUntil=Number(sessionStorage.getItem(ADMIN_LOCK_KEY)||0);}catch(e){}if(now<lockUntil){error.textContent='Acceso bloqueado temporalmente. Intenta más tarde.';return;}const password=document.getElementById('adminPassword').value;try{if(await sha256Hex(password)===ADMIN_PASSWORD_HASH){sessionStorage.setItem(ADMIN_SESSION_KEY,'unlocked');sessionStorage.removeItem(ADMIN_LOCK_KEY);sessionStorage.removeItem('michi_rewards_admin_attempts');error.textContent='';document.getElementById('adminPassword').value='';refreshAdminGate();toast('Acceso de administrador autorizado.');}else{let attempts=Number(sessionStorage.getItem('michi_rewards_admin_attempts')||0)+1;if(attempts>=5){sessionStorage.setItem(ADMIN_LOCK_KEY,String(Date.now()+30000));sessionStorage.setItem('michi_rewards_admin_attempts','0');error.textContent='Demasiados intentos. Espera 30 segundos.';}else{sessionStorage.setItem('michi_rewards_admin_attempts',String(attempts));error.textContent='Contraseña incorrecta. Intentos restantes: '+(5-attempts)+'.';}}}catch(err){error.textContent='No se pudo verificar la contraseña. Abre la app desde HTTPS o localhost.';}});
+const KEY='michi_rewards_demo_v1';
+let state={player:null,points:0,spins:0,history:[],requests:[],angle:0};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)state={...state,...saved};}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render();}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2600);}
+function showTab(name){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+name).classList.remove('hidden');document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));if(name==='admin'){refreshAdminGate();}}
+function render(){if(state.player){const elapsed=Date.now()-(Number(state.lastSpinAt)||0);state.spins=(!state.lastSpinAt||elapsed>=12*60*60*1000)?1:0;}document.getElementById('balance').innerHTML=state.points+' <span style="font-size:13px;color:#B8B5FF">PTS</span>';document.getElementById('spins').textContent=state.spins;document.getElementById('wheelSpins').textContent=state.spins;document.getElementById('requests').textContent=state.requests.length;document.getElementById('userPill').textContent=state.player?state.player.name.toUpperCase():'INVITADO';document.getElementById('spinBtn').disabled=!state.player||state.spins<1;document.getElementById('spinBtn').style.opacity=(!state.player||state.spins<1)?'.5':'1';const list=document.getElementById('historyList');if(!state.history.length){list.textContent='Todavía no tienes movimientos.';}else{list.innerHTML=state.history.slice().reverse().map(x=>`<div class="prize"><span>${escapeHtml(x.label)}<div class="muted">${escapeHtml(x.date)}</div></span><b>${escapeHtml(x.value)}</b></div>`).join('');}}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('registerForm').addEventListener('submit',e=>{e.preventDefault();const name=document.getElementById('playerName').value.trim(),id=document.getElementById('playerId').value.trim(),code=document.getElementById('inviteCode').value.trim().toUpperCase(),birthDate=document.getElementById('birthDate').value;if(code!=='MICHIS'){toast('El código no es válido. Usa MICHIS.');return;}if(!name||!id||!birthDate){toast('Completa todos los campos obligatorios.');return;}const dob=new Date(birthDate+'T00:00:00'),today=new Date();if(Number.isNaN(dob.getTime())||dob>today){toast('La fecha de nacimiento no es válida.');return;}if(state.player&&state.player.id!==id){toast('Este prototipo admite un solo jugador por navegador.');return;}state.player={name,id,code,birthDate};if(state.spins===0)state.spins=1;state.history.push({label:'Registro con código MICHIS',value:'+1 giro',date:new Date().toLocaleString('es-MX')});save();toast('¡Registro de prueba completado! Tienes 1 giro.');showTab('ruleta');});
+function spin(){if(!state.player){toast('Primero regístrate.');showTab('registro');return;}const elapsed=Date.now()-(Number(state.lastSpinAt)||0);if(state.lastSpinAt&&elapsed<12*60*60*1000){const remaining=12*60*60*1000-elapsed;const hours=Math.floor(remaining/3600000),minutes=Math.ceil((remaining%3600000)/60000);toast('Tu próximo giro estará disponible en '+hours+' h '+minutes+' min.');return;}const outcomes=[{label:'100 puntos'},{label:'200 puntos'},{label:'500 puntos'},{label:'100 puntos'},{label:'Premio especial de oro'},{label:'1,000 puntos'}];const weights=[30,25,15,20,3,7];let r=Math.random()*weights.reduce((a,b)=>a+b,0),idx=0;while(r>=weights[idx]){r-=weights[idx];idx++;}const prize=outcomes[idx];state.lastSpinAt=Date.now();state.spins=0;state.requests.push({id:Date.now(),name:prize.label,status:'Pendiente de autorización de Michi'});state.history.push({label:'Resultado de ruleta · '+prize.label,value:'Pendiente de autorización',date:new Date().toLocaleString('es-MX')});save();const box=document.getElementById('spinResult');box.textContent='Resultado: '+prize.label+'. Tu premio quedó pendiente; Michi debe autorizar cualquier entrega de puntos.';box.classList.remove('hidden');toast('Giro registrado. Podrás girar de nuevo en 12 horas.');}
+function redeem(){if(!state.player){toast('Primero regístrate.');showTab('registro');return;}const cost=Number(document.getElementById('rewardSelect').value);if(state.points<cost){toast('No tienes puntos suficientes para solicitar este canje.');return;}state.requests.push({id:Date.now(),name:cost===1000?'Paquete de oro':'Premio especial',cost,status:'Pendiente de autorización de Michi'});state.history.push({label:'Solicitud de canje · '+(cost===1000?'Paquete de oro':'Premio especial'),value:'Pendiente · '+cost+' pts',date:new Date().toLocaleString('es-MX')});save();toast('Solicitud registrada. Michi debe autorizarla.');}
+document.getElementById('missionForm').addEventListener('submit',e=>{e.preventDefault();if(!state.player){toast('Primero registra tu jugador.');showTab('registro');return;}if(!Array.isArray(state.missionClaims))state.missionClaims=[];const claim={id:Date.now(),game:document.getElementById('missionGame').value,name:document.getElementById('missionName').value.trim(),evidence:document.getElementById('missionEvidence').value.trim(),status:'Pendiente de revisión de Michi',date:new Date().toLocaleString('es-MX')};if(!claim.name||!claim.evidence){toast('Completa la misión y su evidencia.');return;}state.missionClaims.push(claim);state.requests.push({id:claim.id,name:'Misión: '+claim.name,status:'Pendiente de revisión de Michi'});save();renderMissionClaims();e.target.reset();toast('Evidencia enviada. Espera la revisión de Michi.');});
+function renderMissionClaims(){const el=document.getElementById('missionClaimList');if(!el)return;const claims=state.missionClaims||[];if(!claims.length){el.textContent='Todavía no has enviado misiones.';return;}el.innerHTML=claims.slice().reverse().map(x=>'<div class="prize"><span><b>'+escapeHtml(x.name)+'</b><div class="muted">'+escapeHtml(x.game)+' · '+escapeHtml(x.date)+'</div><div class="muted">'+escapeHtml(x.status)+'</div></span><b>⏳</b></div>').join('');}
+render();
+</script>
+<script>
+if(!Array.isArray(state.promoCodes)) state.promoCodes=[];
+function featureAction(message){toast(message);}
+function referralCode(){if(!state.player)return 'MICHI-INVITADO';const base=String(state.player.name||'JUGADOR').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)||'JUGADOR';return 'M-'+base;}
+function copyReferral(){const code=referralCode();const el=document.getElementById('personalReferral');if(el)el.textContent=code;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>toast('Código copiado: '+code)).catch(()=>toast('Tu código: '+code));}else{toast('Tu código: '+code);}}
+if(document.getElementById('personalReferral'))document.getElementById('personalReferral').textContent=referralCode();
+const originalRegisterForm=document.getElementById('registerForm');
+originalRegisterForm.addEventListener('submit',()=>{setTimeout(()=>{if(state.player){state.player.game=document.getElementById('gameSelect').value;save();}},0);});
+function generatePromoCode(){if(!isAdminAuthenticated()){toast('Acceso de administrador requerido.');showTab('admin');return;}const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const part=()=>Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');let code;do{code='MICH-'+part()+'-'+part();}while(state.promoCodes.some(x=>x.code===code));document.getElementById('newCode').value=code;toast('Código generado. Configura sus puntos y usos.');}
+function createPromoCode(){if(!isAdminAuthenticated()){toast('Acceso de administrador requerido.');showTab('admin');return;}const code=document.getElementById('newCode').value.trim().toUpperCase();const points=Number(document.getElementById('newCodePoints').value);if(!/^MICH-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)){toast('Primero genera un código con el formato MICH-XXXX-XXXX.');return;}if(!Number.isInteger(points)||points<1||points>1000000){toast('Revisa la cantidad de puntos.');return;}if(state.promoCodes.some(x=>x.code===code)){toast('Ese código ya existe. Genera otro.');return;}state.promoCodes.push({code,points,maxUses:1,usedBy:[]});save();renderAdminCodes();document.getElementById('newCode').value='';toast('Código creado en esta demostración.');}
+function redeemPromoCode(){if(!state.player){toast('Primero registra tu jugador.');showTab('registro');return;}const code=document.getElementById('promoInput').value.trim().toUpperCase();const item=state.promoCodes.find(x=>x.code===code);if(!item){toast('Código no válido.');return;}if(item.usedBy.length>=1){toast('Este código ya fue canjeado en esta demostración.');return;}if(item.usedBy.some(x=>x.player===state.player.id)){toast('Ya solicitaste este código.');return;}item.usedBy.push({player:state.player.id,date:new Date().toISOString(),status:'Pendiente de autorización de Michi'});state.requests.push({id:Date.now(),name:'Código '+item.code,points:item.points,status:'Pendiente de autorización de Michi'});state.history.push({label:'Solicitud de código '+item.code,value:'Pendiente · '+item.points+' pts',date:new Date().toLocaleString('es-MX')});save();renderAdminCodes();document.getElementById('promoInput').value='';toast('Solicitud registrada. Los puntos esperan la autorización de Michi.');}
+function renderAdminCodes(){if(!isAdminAuthenticated())return;const el=document.getElementById('adminCodeList');if(!el)return;if(!state.promoCodes.length){el.textContent='Todavía no hay códigos.';return;}el.innerHTML=state.promoCodes.map(x=>'<div class="prize"><span><b>'+escapeHtml(x.code)+'</b><div class="muted">'+x.points+' puntos · '+x.usedBy.length+'/'+x.maxUses+' usos</div></span><button class="secondary" onclick="copyPromoCode(\''+escapeHtml(x.code)+'\')">Copiar</button></div>').join('');}
+function renderAdminRequests(){if(!isAdminAuthenticated())return;const el=document.getElementById('adminRequestList');if(!el)return;const items=(state.requests||[]).filter(x=>!x.reviewed);if(!items.length){el.textContent='No hay solicitudes pendientes.';return;}el.innerHTML=items.map(x=>'<div class="prize"><span><b>'+escapeHtml(x.name)+'</b><div class="muted">'+escapeHtml(x.status||'Pendiente')+' · '+(Number(x.points||x.cost)||0)+' pts solicitados</div></span><span class="row"><button class="secondary" onclick="reviewRequest('+Number(x.id)+',false)">Rechazar</button><button class="primary" onclick="reviewRequest('+Number(x.id)+',true)">Aprobar</button></span></div>').join('');}
+function reviewRequest(id,approved){if(!isAdminAuthenticated()){toast('Acceso de administrador requerido.');showTab('admin');return;}const item=(state.requests||[]).find(x=>Number(x.id)===Number(id));if(!item||item.reviewed){toast('La solicitud ya fue revisada o no existe.');return;}item.reviewed=true;item.status=approved?'Aprobada por Michi':'Rechazada por Michi';if(approved){const amount=Number(item.points||0);if(amount>0){state.points=Number(state.points||0)+amount;state.history.push({label:'Puntos autorizados · '+item.name,value:'+'+amount+' pts',date:new Date().toLocaleString('es-MX')});}}state.history.push({label:item.status+' · '+item.name,value:approved?'Revisión aprobada':'Sin abono',date:new Date().toLocaleString('es-MX')});save();renderAdminRequests();renderAdminMissions();toast(approved?'Solicitud aprobada en esta demostración.':'Solicitud rechazada.');}
+function renderAdminMissions(){if(!isAdminAuthenticated())return;const el=document.getElementById('adminMissionList');if(!el)return;const items=(state.missionClaims||[]).filter(x=>x.status==='Pendiente de revisión de Michi');if(!items.length){el.textContent='No hay misiones pendientes.';return;}el.innerHTML=items.map(x=>'<div class="prize"><span><b>'+escapeHtml(x.name)+'</b><div class="muted">'+escapeHtml(x.game)+' · '+escapeHtml(x.evidence)+'</div><div class="muted">'+escapeHtml(x.date)+'</div></span><span class="row"><button class="secondary" onclick="reviewMission('+Number(x.id)+',false)">Rechazar</button><button class="primary" onclick="reviewMission('+Number(x.id)+',true)">Aprobar</button></span></div>').join('');}
+function reviewMission(id,approved){if(!isAdminAuthenticated()){toast('Acceso de administrador requerido.');showTab('admin');return;}const item=(state.missionClaims||[]).find(x=>Number(x.id)===Number(id));if(!item||item.status!=='Pendiente de revisión de Michi'){toast('Esta misión ya fue revisada.');return;}item.status=approved?'Aprobada por Michi':'Rechazada por Michi';const req=(state.requests||[]).find(x=>Number(x.id)===Number(id));if(req){req.reviewed=true;req.status=item.status;}if(approved){const amount=Number(item.points||0);if(amount>0){state.points=Number(state.points||0)+amount;state.history.push({label:'Misión aprobada · '+item.name,value:'+'+amount+' pts',date:new Date().toLocaleString('es-MX')});}}state.history.push({label:item.status+' · '+item.name,value:approved?'Revisión aprobada':'Sin abono',date:new Date().toLocaleString('es-MX')});save();renderMissionClaims();renderAdminMissions();renderAdminRequests();toast(approved?'Misión aprobada en esta demostración.':'Misión rechazada.');}
+function copyPromoCode(code){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>toast('Código copiado.')).catch(()=>toast(code));}else{toast(code);}}
+function requestVip(){const name=document.getElementById('vipPlayer').value.trim();const plan=document.getElementById('vipPlan').value;if(!state.player||name.toLowerCase()!==state.player.name.toLowerCase()){toast('Usa el apodo de tu cuenta registrada.');return;}if(!state.player.birthDate){toast('Tu cuenta no tiene fecha de nacimiento registrada.');return;}const dob=new Date(state.player.birthDate+'T00:00:00'),today=new Date();let age=today.getFullYear()-dob.getFullYear();if(today.getMonth()<dob.getMonth()||(today.getMonth()===dob.getMonth()&&today.getDate()<dob.getDate()))age--;if(age<18){toast('El Pase VIP solo está disponible para mayores de 18 años.');return;}if(!Array.isArray(state.vipRequests))state.vipRequests=[];state.vipRequests.push({name,plan,status:'Solicitó contacto privado',date:new Date().toLocaleString('es-MX')});save();toast('Solicitud de prueba registrada. Contacta a Michi por el canal privado acordado.');}
+refreshAdminGate();
+renderMissionClaims();
+renderAdminRequests();
+renderAdminMissions();
+</script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {})); }</script>
+</body>
+</html>
